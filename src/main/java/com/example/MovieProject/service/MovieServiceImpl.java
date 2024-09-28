@@ -20,6 +20,9 @@ public class MovieServiceImpl implements MovieService {
     @Value("${project.poster}")
     private String path;
 
+    @Value("${base.url}")
+    private String baseUrl;
+
     public MovieServiceImpl(MovieRepository movieRepository, FileService fileService){
         this.movieRepository = movieRepository;
         this.fileService = fileService;
@@ -49,10 +52,20 @@ public class MovieServiceImpl implements MovieService {
         Movie savedMovie = movieRepository.save(movie);
 
         // 5. generate the posterURL 
-        
+        String posterUrl = baseUrl + "/file/" + uploadedFileName;
 
         // 6. map Movie object to DTO object and return it
-       return null;
+        MovieDto response = new MovieDto(
+            savedMovie.getMovieId(),
+            savedMovie.getTitle(),
+            savedMovie.getDirector(),
+            savedMovie.getStudio(),
+            savedMovie.getMovieCast(),
+            savedMovie.getReleaseYear(),
+            savedMovie.getPoster(),
+            posterUrl
+        );
+       return response;
     }
 
     @Override
